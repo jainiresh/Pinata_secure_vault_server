@@ -2,6 +2,7 @@ import axios from "axios";
 import KeyMetadata from "../model/KeyMetadata.js";
 import { createPrivateKey, decryptAesKeyWithRSA, decryptFileWithAES } from "../utils/cryptoUtils.js";
 import PinataDetails from "../model/PinataDetails.js";
+import {fileTypeFromBuffer} from 'file-type'
 
 // export async function getFileController(req, res, next){
 //     try {
@@ -49,7 +50,6 @@ export async function getDecryptedFileController(req, res, next){
 
     let keyMetadata = await KeyMetadata.findOne({_id: id})
 
-    console.log(keyMetadata)
     const iv = Buffer.from(keyMetadata.iv, 'base64')
 
     let privateKey = createPrivateKey(keyMetadata.privateKey);
@@ -58,8 +58,15 @@ export async function getDecryptedFileController(req, res, next){
     
     const decryptedFileContent = decryptFileWithAES(encryptedFileContent, decryptedAesKey, iv) ;
 
-    res.setHeader('Content-Disposition', `attachment; filename="decrypted-file"`);
-    res.setHeader('Content-Type', 'application/octet-stream');
+    const type = await fileTypeFromBuffer(decryptedFileContent);
+    let fileExtension = type ? type.ext : 'bin';
+    let mimeType = type ? type.mime : 'application/octet-stream'
+
+    console.log(fileExtension);
+    console.log(mimeType)
+
+    res.setHeader('Content-Disposition', `attachment; filename="decrypted-file.${fileExtension}"`);
+    res.setHeader('Content-Type', mimeType);
 
     return res.status(200).send(decryptedFileContent);
 

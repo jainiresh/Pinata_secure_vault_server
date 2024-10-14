@@ -11,5 +11,6 @@ export const appConfig = {
     PINATA_URL_DETAILS_COLLECTION: process.env.PINATA_URL_DETAILS_COLLECTION,
     DATABASE_NAME: process.env.DATABASE_NAME,
 
-    PORT: process.env.PORT
+    PORT: process.env.PORT,
+    SELF_URL: process.env.SELF_URL
   };

@@ -47,7 +47,7 @@ export async function registerUser(req, res, next) {
 
         await KeyMetaDataModel.save();
 
-        return res.status(200).json({success: 1, email, privateKey, id: KeyMetaDataModel._id})
+        return res.status(200).json({success: 1, email, privateKey, id: KeyMetaDataModel._id, firstName: KeyMetaDataModel.firstName, lastName: KeyMetaDataModel.lastName})
         
     } catch (error) {
         console.log(error);
@@ -70,7 +70,7 @@ export async function loginUser(req, res, next) {
       }
 
       if(password == existingUser.password)
-      return res.status(200).json({success: 1, email, privateKey : existingUser.privateKey, id: existingUser._id})
+      return res.status(200).json({success: 1, email, privateKey : existingUser.privateKey, id: existingUser._id, firstName: existingUser.firstName, lastName: existingUser.lastName})
       else
       return res.status(401).json({error:`Password is incorrect`});
   } catch (error) {
